@@ -12,4 +12,12 @@
 *.out
 
 # Dependency directories (remove the comment below to include it)
-# vendor/
+vendor/*
+!vendor/.gitkeep
+
+# Build directory
+build/*
+!build/.gitkeep
+
+# Editors
+.idea/
