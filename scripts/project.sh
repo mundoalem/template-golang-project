@@ -64,6 +64,7 @@ _release() {
   tar czf "$tarball" "$BUILDDIR/$PROGNAME"
 
   if [ "$CI" = "true" ]; then
+    gh auth login
     gh release create "v$version" -F CHANGELOG.md "$tarball"
   fi
 }
