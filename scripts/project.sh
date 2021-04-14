@@ -64,7 +64,7 @@ _release() {
   tar czf "$tarball" "$BUILDDIR/$PROGNAME"
 
   if [ "$CI" = "true" ]; then
-    gh auth login
+    echo "$GITHUB_TOKEN" | gh auth login --with-token
     gh release create "v$version" -F CHANGELOG.md "$tarball"
   fi
 }
