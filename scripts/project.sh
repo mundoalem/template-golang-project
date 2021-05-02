@@ -34,13 +34,13 @@ _build() {
 }
 
 _clean() {
-    rm -f "$BUILDDIR/$PROGNAME"*
+  rm -f "$BUILDDIR/$PROGNAME"*
 }
 
 _lint() {
-	go fmt "./$CMDDIR/..."
-	go fmt "./$INTERNALDIR/..."
-	go fmt "./$PKGDIR/..."
+  go fmt "./$CMDDIR/..."
+  go fmt "./$INTERNALDIR/..."
+  go fmt "./$PKGDIR/..."
 }
 
 _lock() {
@@ -58,17 +58,13 @@ _release() {
   os=$(uname -s | tr '[:upper:]' '[:lower:]')
   arch=$(uname -m | tr '[:upper:]' '[:lower:]')
 
-  tarball="$BUILDDIR/${PROGNAME}-${version}-${os}-${arch}.tar.gz"
+  artifact="${PROGNAME}-${version}-${os}-${arch}.tar.gz"
+  tarball="$BUILDDIR/$artifact"
     
   test -f "$BUILDDIR/$PROGNAME" || _build
   tar czf "$tarball" "$BUILDDIR/$PROGNAME"
 
-  if [ "$CI" = "true" ]; then
-    echo "$GITHUB_TOKEN" >token.txt
-    gh auth login --with-token <token.txt
-    rm -f token.txt
-    gh release create "v$version" -F CHANGELOG.md "$tarball"
-  fi
+  echo "::set-output name=version::v$version"
 }
 
 _reset() {
