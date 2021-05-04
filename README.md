@@ -1,13 +1,8 @@
 # golang-project-template
 
-![](https://github.com/egonbraun/golang-project-template/actions/workflows/pipeline.yml/badge.svg)
+![Go Version](https://img.shields.io/github/go-mod/go-version/egonbraun/golang-project-template) ![Release Version](https://img.shields.io/github/v/release/egonbraun/golang-project-template) ![License](https://img.shields.io/github/license/egonbraun/golang-project-template) ![Pipeline Status](https://github.com/egonbraun/golang-project-template/actions/workflows/pipeline.yml/badge.svg) [![codecov](https://codecov.io/gh/egonbraun/golang-project-template/branch/main/graph/badge.svg?token=R0HJ0SAOC0)](https://codecov.io/gh/egonbraun/golang-project-template) ![Issues](https://img.shields.io/github/issues/egonbraun/golang-project-template) ![Contributors](https://img.shields.io/github/contributors/egonbraun/golang-project-template)
 
 A template to scaffold a Golang project.
-
-| Software | Version |
-| -------- | ------- |
-| Go       | 1.15    |
-| GPL      | v3      |
 
 You can find it [here](https://github.com/golang-standards/project-layout)
 a full explanation of the directory structure.
@@ -23,7 +18,8 @@ pass it the following arguments:
 | lock     | Install dependencies from `go.mod`                                |
 | release  | Creates a package and, if in pipeline, also creates a release (1) |
 | reset    | Removes installed dependencies                                    |
-| run      | Builds and runs the project (2)                                   |                                             
+| run      | Builds and runs the project (2)                                   |
+| scan     | Runs vulnerability scans
 | test     | Runs all tests                                                    |
 
 1. The package will be created for the current architecture
@@ -31,12 +27,21 @@ pass it the following arguments:
 
 Example:
 
-```shell
+```bash
 $ scripts/project.sh lint
 $ scripts/project.sh test
 $ scripts/project.sh build
 $ scripts/project.sh release
 ```
+
+## Environment Variables
+
+If you wish to use the [Codecov](https://www.codecov.io/) and [Snyk](https://www.snyk.io/) make sure you set the
+following environment secrets in your pipeline.
+
+`CODECOV_TOKEN`
+
+`SNYK_TOKEN`
 
 ## FAQ
 

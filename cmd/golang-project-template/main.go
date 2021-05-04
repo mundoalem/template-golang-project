@@ -9,7 +9,7 @@ import (
 )
 
 const AppName = "example"
-const Version = "1.0.0"
+const Version = "1.1.0"
 
 func main() {
 	c := cli.NewCLI(AppName, Version)

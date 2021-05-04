@@ -33,8 +33,24 @@ _build() {
   chmod +x "$BUILDDIR/$PROGNAME"
 }
 
+_dep() {
+  test $# -eq 1 || return 0
+
+  dep="$1"
+
+  which "$dep" >/dev/null 2>&1
+
+  if [ $? -ne 0 ]; then
+    echo "error: $dep not found in your \$PATH"
+    return 1
+  fi
+
+  return 0
+}
+
 _clean() {
   rm -f "$BUILDDIR/$PROGNAME"*
+  rm -f coverage.txt
 }
 
 _lint() {
@@ -64,7 +80,11 @@ _release() {
   test -f "$BUILDDIR/$PROGNAME" || _build
   tar czf "$tarball" "$BUILDDIR/$PROGNAME"
 
-  echo "::set-output name=version::v$version"
+  if [ "$CI" == "true" ]; then
+    echo "::set-output name=version::v$version"
+  else
+    echo "$PROGNAME v$version"
+  fi
 }
 
 _reset() {
@@ -76,14 +96,21 @@ _run() {
   "$BUILDDIR/$PROGNAME" "$@"
 }
 
+_scan() {
+  _dep "snyk" || exit 1
+  snyk test
+}
+
 _test() {
-  go test -v -count=1 -race ./...
+  go test -v -count=1 -race -coverprofile=coverage.txt -covermode=atomic ./...
 }
 
 _main() {
   option="$1"
 
   shift
+
+  _dep "go" || exit 1
 
   case $option in
     build)
@@ -106,6 +133,9 @@ _main() {
       ;;
     run)
       _run "$@"
+      ;;
+    scan)
+      _scan
       ;;
     test)
       _test

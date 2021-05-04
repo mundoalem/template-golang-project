@@ -46,6 +46,26 @@ jobs:
       - run: |
           go mod vendor
           scripts/project.sh test
+      - run: |
+          bash <(curl -s https://codecov.io/bash)
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+  scan:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        go-version: [ 1.15.7 ]
+        os: [ ubuntu-20.04 ]
+    name: Scan
+    needs: lint
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          go mod vendor
+      - uses: snyk/actions/golang@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
   build:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -54,7 +74,7 @@ jobs:
         go-version: [ 1.15.7 ]
         os: [ ubuntu-20.04 ]
     name: Build
-    needs: test
+    needs: [test, scan]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-go@v2
