@@ -1,4 +1,4 @@
-# golang-project-template
+# Go Language's Project Template
 
 ![Go Version](https://img.shields.io/github/go-mod/go-version/egonbraun/golang-project-template) ![Release Version](https://img.shields.io/github/v/release/egonbraun/golang-project-template) ![License](https://img.shields.io/github/license/egonbraun/golang-project-template) ![Pipeline Status](https://github.com/egonbraun/golang-project-template/actions/workflows/pipeline.yml/badge.svg) [![codecov](https://codecov.io/gh/egonbraun/golang-project-template/branch/main/graph/badge.svg?token=R0HJ0SAOC0)](https://codecov.io/gh/egonbraun/golang-project-template) ![Issues](https://img.shields.io/github/issues/egonbraun/golang-project-template) ![Contributors](https://img.shields.io/github/contributors/egonbraun/golang-project-template)
 
