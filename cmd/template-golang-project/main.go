@@ -4,12 +4,12 @@ import (
 	"log"
 	"os"
 
-	"github.com/egonbraun/golang-project-template/internal/command"
 	"github.com/mitchellh/cli"
+	"github.com/mundoalem/template-golang-project/internal/command"
 )
 
-const AppName = "example"
-const Version = "1.1.0"
+const AppName = "template-golang-project"
+const Version = "1.0.0"
 
 func main() {
 	c := cli.NewCLI(AppName, Version)
