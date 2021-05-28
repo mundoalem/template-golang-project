@@ -66,6 +66,8 @@ jobs:
       - uses: snyk/actions/golang@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --fail-on=upgradable
   build:
     runs-on: ${{ matrix.os }}
     strategy:
