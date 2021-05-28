@@ -1,4 +1,4 @@
-module github.com/egonbraun/golang-project-template
+module github.com/mundoalem/template-golang-project
 
 go 1.15
 
