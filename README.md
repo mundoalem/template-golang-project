@@ -1,6 +1,6 @@
 # Go Language's Project Template
 
-![Go Version](https://img.shields.io/github/go-mod/go-version/egonbraun/golang-project-template) ![Release Version](https://img.shields.io/github/v/release/egonbraun/golang-project-template) ![License](https://img.shields.io/github/license/egonbraun/golang-project-template) ![Pipeline Status](https://github.com/egonbraun/golang-project-template/actions/workflows/pipeline.yml/badge.svg) [![codecov](https://codecov.io/gh/egonbraun/golang-project-template/branch/main/graph/badge.svg?token=R0HJ0SAOC0)](https://codecov.io/gh/egonbraun/golang-project-template) ![Issues](https://img.shields.io/github/issues/egonbraun/golang-project-template) ![Contributors](https://img.shields.io/github/contributors/egonbraun/golang-project-template)
+![Go Version](https://img.shields.io/github/go-mod/go-version/mundoalem/template-golang-project) ![Release Version](https://img.shields.io/github/v/release/mundoalem/template-golang-project) ![License](https://img.shields.io/github/license/mundoalem/template-golang-project) ![Pipeline Status](https://github.com/mundoalem/template-golang-project/actions/workflows/pipeline.yml/badge.svg) [![codecov](https://codecov.io/gh/mundoalem/template-golang-project/branch/main/graph/badge.svg?token=R0HJ0SAOC0)](https://codecov.io/gh/mundoalem/template-golang-project) ![Issues](https://img.shields.io/github/issues/mundoalem/template-golang-project) ![Contributors](https://img.shields.io/github/contributors/mundoalem/template-golang-project)
 
 A template to scaffold a Golang project.
 
