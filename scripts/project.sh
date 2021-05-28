@@ -65,8 +65,10 @@ _lock() {
 }
 
 _release() {
+  test -f "$BUILDDIR/$PROGNAME" || _build
+
   version=$(
-    cat cmd/golang-project-template/*.go |
+    cat "cmd/$PROGNAME/"*.go |
     sed -n 's/^const\ Version\ =\ \"\(.*\)\"$/\1/p' |
     head -1
   )
@@ -98,7 +100,7 @@ _run() {
 
 _scan() {
   _dep "snyk" || exit 1
-  snyk test
+  snyk test --fail-on=upgradable
 }
 
 _test() {
