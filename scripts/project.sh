@@ -82,7 +82,7 @@ _release() {
   test -f "$BUILDDIR/$PROGNAME" || _build
   tar czf "$tarball" "$BUILDDIR/$PROGNAME"
 
-  if [ "$CI" == "true" ]; then
+  if [ "$CI" = "true" ]; then
     echo "::set-output name=version::v$version"
   else
     echo "$PROGNAME v$version"
