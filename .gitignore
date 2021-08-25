@@ -20,5 +20,9 @@ vendor/*
 build/*
 !build/.gitkeep
 
+# Package directory
+pkg/*
+!pkg/.gitkeep
+
 # Editors
 .idea/
