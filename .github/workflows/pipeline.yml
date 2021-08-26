@@ -27,7 +27,7 @@ jobs:
           curl -o /tmp/mage.tar.gz ${{ url }}
           tar xf /tmp/mage.tar.gz mage -C /usr/bin/
           rm -f /tmp/mage.tar.gz
-        env:
+        with:
           url: $MAGE_URL
       - run: |
           go mod vendor
@@ -54,7 +54,7 @@ jobs:
           curl -o /tmp/mage.tar.gz ${{ url }}
           tar xf /tmp/mage.tar.gz mage -C /usr/bin/
           rm -f /tmp/mage.tar.gz
-        env:
+        with:
           url: $MAGE_URL
       - run: |
           go mod vendor
@@ -103,7 +103,7 @@ jobs:
           curl -o /tmp/mage.tar.gz ${{ url }}
           tar xf /tmp/mage.tar.gz mage -C /usr/bin/
           rm -f /tmp/mage.tar.gz
-        env:
+        with:
           url: $MAGE_URL
       - run: |
           go mod vendor
@@ -136,7 +136,7 @@ jobs:
           curl -o /tmp/mage.tar.gz ${{ url }}
           tar xf /tmp/mage.tar.gz mage -C /usr/bin/
           rm -f /tmp/mage.tar.gz
-        env:
+        with:
           url: $MAGE_URL
       - run: mage -v release
       - uses: softprops/action-gh-release@v1
