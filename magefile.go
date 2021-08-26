@@ -6,7 +6,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"path"
@@ -194,19 +193,6 @@ func Build(ctx context.Context) error {
 	return nil
 }
 
-func Check() error {
-	for _, cmd := range strings.Split(CmdDependencies, " ") {
-		_, err := exec.LookPath(cmd)
-
-		if err != nil {
-			log.Println(err)
-			return err
-		}
-	}
-
-	return nil
-}
-
 func Clean() error {
 	pathsToRemove := []string{
 		CoverageProfileFile,
@@ -354,6 +340,12 @@ func Reset() error {
 }
 
 func Scan() error {
+	_, err := exec.LookPath("snyk")
+
+	if err != nil {
+		return err
+	}
+
 	args := []string{
 		"test",
 		"--fail-on=upgradable",
