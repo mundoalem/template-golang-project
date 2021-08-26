@@ -2,9 +2,6 @@ name: Pipeline
 
 on: [push, pull_request]
 
-env:
-  MAGE_URL: https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz
-
 jobs:
   lint:
     runs-on: ${{ matrix.os }}
@@ -24,11 +21,9 @@ jobs:
           path: vendor/pkg/mod
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
       - run: |
-          curl -o /tmp/mage.tar.gz ${{ url }}
+          curl -o /tmp/mage.tar.gz https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz
           tar xf /tmp/mage.tar.gz mage -C /usr/bin/
           rm -f /tmp/mage.tar.gz
-        with:
-          url: $MAGE_URL
       - run: |
           go mod vendor
           mage -v lint
@@ -51,11 +46,9 @@ jobs:
           path: vendor/pkg/mod
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
       - run: |
-          curl -o /tmp/mage.tar.gz ${{ url }}
+          curl -o /tmp/mage.tar.gz https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz
           tar xf /tmp/mage.tar.gz mage -C /usr/bin/
           rm -f /tmp/mage.tar.gz
-        with:
-          url: $MAGE_URL
       - run: |
           go mod vendor
           mage -v test
@@ -100,11 +93,9 @@ jobs:
           path: vendor/pkg/mod
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
       - run: |
-          curl -o /tmp/mage.tar.gz ${{ url }}
+          curl -o /tmp/mage.tar.gz https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz
           tar xf /tmp/mage.tar.gz mage -C /usr/bin/
           rm -f /tmp/mage.tar.gz
-        with:
-          url: $MAGE_URL
       - run: |
           go mod vendor
           mage -v build
@@ -133,11 +124,9 @@ jobs:
           name: build-artifacts
           path: pkg/
       - run: |
-          curl -o /tmp/mage.tar.gz ${{ url }}
+          curl -o /tmp/mage.tar.gz https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz
           tar xf /tmp/mage.tar.gz mage -C /usr/bin/
           rm -f /tmp/mage.tar.gz
-        with:
-          url: $MAGE_URL
       - run: mage -v release
       - uses: softprops/action-gh-release@v1
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
