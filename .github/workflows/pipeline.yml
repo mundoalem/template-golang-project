@@ -21,9 +21,9 @@ jobs:
           path: vendor/pkg/mod
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
       - run: |
-          curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar -xzf- -C /usr/bin mage
+          curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar -xzf- mage
           go mod vendor
-          mage -v lint
+          ./mage -v lint
   test:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -43,9 +43,9 @@ jobs:
           path: vendor/pkg/mod
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
       - run: |
-          curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar -xzf- -C /usr/bin mage
+          curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar -xzf- mage
           go mod vendor
-          mage -v test
+          ./mage -v test
       - run: |
           bash <(curl -s https://codecov.io/bash)
         env:
@@ -87,9 +87,9 @@ jobs:
           path: vendor/pkg/mod
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
       - run: |
-          curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar -xzf- -C /usr/bin mage
+          curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar -xzf- mage
           go mod vendor
-          mage -v build
+          ./mage -v build
       - uses: actions/upload-artifact@v2
         with:
           name: build-artifacts
@@ -115,8 +115,8 @@ jobs:
           name: build-artifacts
           path: pkg/
       - run: |
-          curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar -xzf - mage -C /usr/bin
-          mage -v release
+          curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar -xzf- mage
+          ./mage -v release
       - uses: softprops/action-gh-release@v1
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
         with:
