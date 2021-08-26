@@ -3,9 +3,7 @@ name: Pipeline
 on: [push, pull_request]
 
 env:
-  CGO_ENABLED: 0
-  GO111MODULE: on
-  GO15VENDOREXPERIMENT: 1
+  MAGE_URL: https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz
 
 jobs:
   lint:
@@ -21,6 +19,10 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go-version }}
+      - run: |
+          curl -o /tmp/mage.tar.gz ${{ MAGE_URL }}
+          tar xf /tmp/mage.tar.gz mage -C /usr/bin/
+          rm -f /tmp/mage.tar.gz
       - uses: actions/cache@v2
         with:
           path: vendor/pkg/mod
@@ -43,6 +45,10 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go-version }}
+      - run: |
+          curl -o /tmp/mage.tar.gz ${{ MAGE_URL }}
+          tar xf /tmp/mage.tar.gz mage -C /usr/bin/
+          rm -f /tmp/mage.tar.gz
       - uses: actions/cache@v2
         with:
           path: vendor/pkg/mod
@@ -87,6 +93,10 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go-version }}
+      - run: |
+          curl -o /tmp/mage.tar.gz ${{ MAGE_URL }}
+          tar xf /tmp/mage.tar.gz mage -C /usr/bin/
+          rm -f /tmp/mage.tar.gz
       - uses: actions/cache@v2
         with:
           path: vendor/pkg/mod
@@ -115,6 +125,10 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go-version }}
+      - run: |
+          curl -o /tmp/mage.tar.gz ${{ MAGE_URL }}
+          tar xf /tmp/mage.tar.gz mage -C /usr/bin/
+          rm -f /tmp/mage.tar.gz
       - uses: actions/download-artifact@v2
         with:
           name: build-artifacts
