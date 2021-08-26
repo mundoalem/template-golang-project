@@ -20,7 +20,8 @@ jobs:
         with:
           path: vendor/pkg/mod
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-      - run: |
+      - name: Lint
+        run: |
           curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar -xzf- mage
           go mod vendor
           ./mage -v lint
@@ -42,11 +43,13 @@ jobs:
         with:
           path: vendor/pkg/mod
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-      - run: |
+      - name: Test
+        run: |
           curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar -xzf- mage
           go mod vendor
           ./mage -v test
-      - run: |
+      - name: Coverage
+        run: |
           bash <(curl -s https://codecov.io/bash)
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
@@ -61,7 +64,8 @@ jobs:
     needs: lint
     steps:
       - uses: actions/checkout@v2
-      - run: |
+      - name: Install Dependencies
+        run: |
           go mod vendor
       - uses: snyk/actions/golang@master
         env:
@@ -86,7 +90,8 @@ jobs:
         with:
           path: vendor/pkg/mod
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-      - run: |
+      - name: Build
+        run: |
           curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar -xzf- mage
           go mod vendor
           ./mage -v build
@@ -114,7 +119,8 @@ jobs:
         with:
           name: build-artifacts
           path: pkg/
-      - run: |
+      - name: Release
+        run: |
           curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar -xzf- mage
           ./mage -v release
       - uses: softprops/action-gh-release@v1
