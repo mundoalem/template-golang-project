@@ -26,7 +26,7 @@ func TestVersionCommand_Synopsis(t *testing.T) {
 	cmd := VersionCommand{}
 	msg := cmd.Synopsis()
 
-	if msg != "Shows the command version" {
+	if msg != "Shows the command version and build metadata" {
 		t.Log("Synopsis() returned unexpected value", msg)
 		t.Fail()
 	}

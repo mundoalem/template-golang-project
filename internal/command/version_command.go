@@ -11,7 +11,7 @@ type VersionCommand struct {
 }
 
 func (c *VersionCommand) Help() string {
-	return "Shows the command version"
+	return "Shows the command version and build metadata"
 }
 
 func (c *VersionCommand) Run(args []string) int {
@@ -23,5 +23,5 @@ func (c *VersionCommand) Run(args []string) int {
 }
 
 func (c *VersionCommand) Synopsis() string {
-	return "Shows the command version"
+	return "Shows the command version and build metadata"
 }
