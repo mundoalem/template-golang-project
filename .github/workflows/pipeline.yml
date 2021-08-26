@@ -19,15 +19,14 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go-version }}
-      - run: |
-          curl -o /tmp/mage.tar.gz ${{ MAGE_URL }}
-          tar xf /tmp/mage.tar.gz mage -C /usr/bin/
-          rm -f /tmp/mage.tar.gz
       - uses: actions/cache@v2
         with:
           path: vendor/pkg/mod
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: ${{ runner.os }}-go-
+      - run: |
+          curl -o /tmp/mage.tar.gz ${{ MAGE_URL }}
+          tar xf /tmp/mage.tar.gz mage -C /usr/bin/
+          rm -f /tmp/mage.tar.gz
       - run: |
           go mod vendor
           mage -v lint
@@ -45,15 +44,14 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go-version }}
-      - run: |
-          curl -o /tmp/mage.tar.gz ${{ MAGE_URL }}
-          tar xf /tmp/mage.tar.gz mage -C /usr/bin/
-          rm -f /tmp/mage.tar.gz
       - uses: actions/cache@v2
         with:
           path: vendor/pkg/mod
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: ${{ runner.os }}-go-
+      - run: |
+          curl -o /tmp/mage.tar.gz ${{ MAGE_URL }}
+          tar xf /tmp/mage.tar.gz mage -C /usr/bin/
+          rm -f /tmp/mage.tar.gz
       - run: |
           go mod vendor
           mage -v test
@@ -93,15 +91,14 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go-version }}
-      - run: |
-          curl -o /tmp/mage.tar.gz ${{ MAGE_URL }}
-          tar xf /tmp/mage.tar.gz mage -C /usr/bin/
-          rm -f /tmp/mage.tar.gz
       - uses: actions/cache@v2
         with:
           path: vendor/pkg/mod
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: ${{ runner.os }}-go-
+      - run: |
+          curl -o /tmp/mage.tar.gz ${{ MAGE_URL }}
+          tar xf /tmp/mage.tar.gz mage -C /usr/bin/
+          rm -f /tmp/mage.tar.gz
       - run: |
           go mod vendor
           mage -v build
@@ -125,14 +122,14 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go-version }}
-      - run: |
-          curl -o /tmp/mage.tar.gz ${{ MAGE_URL }}
-          tar xf /tmp/mage.tar.gz mage -C /usr/bin/
-          rm -f /tmp/mage.tar.gz
       - uses: actions/download-artifact@v2
         with:
           name: build-artifacts
           path: pkg/
+      - run: |
+          curl -o /tmp/mage.tar.gz ${{ MAGE_URL }}
+          tar xf /tmp/mage.tar.gz mage -C /usr/bin/
+          rm -f /tmp/mage.tar.gz
       - run: mage -v release
       - uses: softprops/action-gh-release@v1
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
