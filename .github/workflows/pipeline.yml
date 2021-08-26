@@ -5,7 +5,7 @@ on: [push, pull_request]
 env:
   CGO_ENABLED: 0
   GO111MODULE: on
-	GO15VENDOREXPERIMENT: 1
+  GO15VENDOREXPERIMENT: 1
 
 jobs:
   lint:
