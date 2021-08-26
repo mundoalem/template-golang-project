@@ -241,10 +241,39 @@ func Lint() error {
 	}
 
 	for _, path := range pathsToLint {
-		path = fmt.Sprintf("./%s/...", path)
+		var args []string
+		var err error
 
-		if err := sh.RunV("go", "fmt", path); err != nil {
-			return err
+		if os.Getenv("CI") != "" {
+			args = []string{
+				"-e",
+				"-l",
+				path,
+			}
+
+			output, err := sh.Output("gofmt", args...)
+
+			if err != nil {
+				return err
+			}
+
+			if strings.TrimSpace(output) != "" {
+				filesWithErrors := strings.Join(strings.Split(output, "\n"), ", ")
+				errorMessage := fmt.Sprintf("Some files need linting: %s\n", filesWithErrors)
+
+				return errors.New(errorMessage)
+			}
+		} else {
+			args = []string{
+				"fmt",
+				fmt.Sprintf("./%s/...", path),
+			}
+
+			err = sh.RunV("go", args...)
+
+			if err != nil {
+				return err
+			}
 		}
 	}
 
