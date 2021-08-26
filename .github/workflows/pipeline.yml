@@ -21,10 +21,7 @@ jobs:
           path: vendor/pkg/mod
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
       - run: |
-          curl -o /tmp/mage.tar.gz https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz
-          tar xf /tmp/mage.tar.gz mage -C /usr/bin/
-          rm -f /tmp/mage.tar.gz
-      - run: |
+          curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar -xf- -C /usr/bin mage
           go mod vendor
           mage -v lint
   test:
@@ -46,10 +43,7 @@ jobs:
           path: vendor/pkg/mod
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
       - run: |
-          curl -o /tmp/mage.tar.gz https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz
-          tar xf /tmp/mage.tar.gz mage -C /usr/bin/
-          rm -f /tmp/mage.tar.gz
-      - run: |
+          curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar -xf- -C /usr/bin mage
           go mod vendor
           mage -v test
       - run: |
@@ -93,10 +87,7 @@ jobs:
           path: vendor/pkg/mod
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
       - run: |
-          curl -o /tmp/mage.tar.gz https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz
-          tar xf /tmp/mage.tar.gz mage -C /usr/bin/
-          rm -f /tmp/mage.tar.gz
-      - run: |
+          curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar -xf- -C /usr/bin mage
           go mod vendor
           mage -v build
       - uses: actions/upload-artifact@v2
@@ -124,10 +115,8 @@ jobs:
           name: build-artifacts
           path: pkg/
       - run: |
-          curl -o /tmp/mage.tar.gz https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz
-          tar xf /tmp/mage.tar.gz mage -C /usr/bin/
-          rm -f /tmp/mage.tar.gz
-      - run: mage -v release
+          curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar xf - mage -C /usr/bin
+          mage -v release
       - uses: softprops/action-gh-release@v1
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
         with:
