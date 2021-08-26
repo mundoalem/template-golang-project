@@ -107,7 +107,7 @@ func version() (string, error) {
 // /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func Build(ctx context.Context) error {
-	mg.SerialDeps(Check, Clean, Lock)
+	mg.SerialDeps(Clean, Lock)
 
 	isRelease := false
 
