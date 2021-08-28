@@ -62,18 +62,18 @@ func linkerFlags(isRelease bool) (string, error) {
 	hash, err := commit()
 
 	if err != nil {
-		return strings.Join(flags, " "), err
+		fmt.Printf("Warning: Could not get commit hash, reason: %s", err)
+	} else {
+		flags = append(flags, fmt.Sprintf(`-X "main.Commit=%s"`, hash))
 	}
-
-	flags = append(flags, fmt.Sprintf(`-X "main.Commit=%s"`, hash))
 
 	versionTag, err := version()
 
 	if err != nil {
-		return strings.Join(flags, " "), err
+		fmt.Printf("Warning: Could not get version tag, reason: %s", err)
+	} else {
+		flags = append(flags, fmt.Sprintf(`-X "main.Version=%s"`, versionTag))
 	}
-
-	flags = append(flags, fmt.Sprintf(`-X "main.Version=%s"`, versionTag))
 
 	if isRelease {
 		flags = append(flags, "-s", "-w")
@@ -83,23 +83,25 @@ func linkerFlags(isRelease bool) (string, error) {
 }
 
 func version() (string, error) {
-	output, err := sh.Output("git", "tag", "--sort=-version:refname", "-l", "v*")
+	revision, err := sh.Output("git", "rev-list", "--tags", "--max-count=1")
 
 	if err != nil {
 		return "", err
 	}
 
-	if strings.TrimSpace(output) == "" {
+	tag, err := sh.Output("git", "describe", "--tags", revision)
+
+	if err != nil {
+		return "", err
+	}
+
+	tag = strings.TrimSpace(tag)
+
+	if tag == "" {
 		return "", errors.New("Release tag not found")
 	}
 
-	tags := strings.Split(output, "\n")
-
-	if len(tags) <= 0 {
-		return "unknown", nil
-	}
-
-	return tags[0], nil
+	return tag, nil
 }
 
 // /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
