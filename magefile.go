@@ -173,7 +173,7 @@ func Build() error {
 				err := sh.RunWithV(envVars, "go", args...)
 
 				if err != nil {
-					fmt.Printf("Build for %s/%s failed: %s\n", os, arch, err)
+					fmt.Printf("Error: Build for %s/%s failed: %s\n", os, arch, err)
 					hasErrors = true
 				} else {
 					fmt.Printf("Build for %s/%s completed\n", os, arch)
@@ -292,10 +292,16 @@ func Release(ctx context.Context) error {
 	platforms := strings.Split(SupportedPlatforms, " ")
 
 	for _, platform := range platforms {
-		os := strings.Split(platform, "/")[0]
-		arch := strings.Split(platform, "/")[1]
-		sourcePath := path.Join(PkgDir, fmt.Sprintf("%s_%s", os, arch))
-		tarball := fmt.Sprintf("%s-%s-%s-%s.tar.gz", programName, version[1:], os, arch)
+		goos := strings.Split(platform, "/")[0]
+		goarch := strings.Split(platform, "/")[1]
+		sourcePath := path.Join(PkgDir, fmt.Sprintf("%s_%s", goos, goarch))
+
+		if _, err := os.Stat(sourcePath); os.IsNotExist(err) {
+			fmt.Printf("Warning: Build files not found for %s/%s\n", goos, goarch)
+			continue
+		}
+
+		tarball := fmt.Sprintf("%s-%s-%s-%s.tar.gz", programName, version[1:], goos, goarch)
 		destPath := path.Join(BuildDir, tarball)
 
 		args := []string{
