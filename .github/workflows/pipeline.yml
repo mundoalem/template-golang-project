@@ -110,7 +110,8 @@ jobs:
         if: steps.cache-vendor.outputs.cache-hit != 'true'
         run: |
           go mod vendor
-      - uses: snyk/actions/golang@master
+      - name: Scan
+        uses: snyk/actions/golang@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
