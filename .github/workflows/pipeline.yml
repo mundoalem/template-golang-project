@@ -31,9 +31,9 @@ jobs:
       - name: Install Mage
         if: steps.cache-mage.outputs.cache-hit != 'true'
         run: |
-          echo $PATH
           curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar -xzf- mage
           chmod +x mage
+          mkdir ~/.local/bin
           mv mage ~/.local/bin
       - name: Lint
         run: |
@@ -70,6 +70,7 @@ jobs:
         run: |
           curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar -xzf- mage
           chmod +x mage
+          mkdir ~/.local/bin
           mv mage ~/.local/bin
       - name: Test
         run: |
@@ -130,6 +131,7 @@ jobs:
         run: |
           curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar -xzf- mage
           chmod +x mage
+          mkdir ~/.local/bin
           mv mage ~/.local/bin
       - name: Build
         run: |
@@ -170,6 +172,7 @@ jobs:
         run: |
           curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar -xzf- mage
           chmod +x mage
+          mkdir ~/.local/bin
           mv mage ~/.local/bin
       - name: Release
         run: |
