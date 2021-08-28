@@ -70,7 +70,7 @@ func linkerFlags(isRelease bool) (string, error) {
 	versionTag, err := version()
 
 	if err != nil {
-		return "", err
+		return strings.Join(flags, " "), err
 	}
 
 	flags = append(flags, fmt.Sprintf(`-X "main.Version=%s"`, versionTag))
@@ -135,7 +135,7 @@ func Build(ctx context.Context) error {
 	ldFlags, err := linkerFlags(isRelease)
 
 	if err != nil {
-		return err
+		fmt.Println(err)
 	}
 
 	hasErrors := false
