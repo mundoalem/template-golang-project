@@ -70,7 +70,7 @@ func linkerFlags(isRelease bool) (string, error) {
 	versionTag, err := version()
 
 	if err != nil {
-		fmt.Printf("Warning: Could not get version tag, reason: %s", err)
+		fmt.Printf("Warning: Could not get version tag, reason: %s\n", err)
 	} else {
 		flags = append(flags, fmt.Sprintf(`-X "main.Version=%s"`, versionTag))
 	}
@@ -83,10 +83,21 @@ func linkerFlags(isRelease bool) (string, error) {
 }
 
 func version() (string, error) {
-	revision, err := sh.Output("git", "rev-list", "--tags", "--max-count=1")
+	var err error
+	var revision string
 
-	if err != nil {
-		return "", err
+	if os.Getenv("CI") != "" {
+		revision = os.Getenv("GITHUB_SHA")
+	} else {
+		revision, err = sh.Output("git", "rev-list", "--tags", "--max-count=1")
+
+		if err != nil {
+			return "", err
+		}
+	}
+
+	if revision == "" {
+		return "", errors.New("Could not find repository's revision hash")
 	}
 
 	tag, err := sh.Output("git", "describe", "--tags", revision)
