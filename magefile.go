@@ -3,7 +3,6 @@
 package main
 
 import (
-	"context"
 	"errors"
 	"fmt"
 	"os"
@@ -100,7 +99,7 @@ func version() (string, error) {
 		return "", errors.New("Could not find repository's revision hash")
 	}
 
-	tag, err := sh.Output("git", "describe", "--tags", revision)
+	tag, err := sh.Output("git", "describe", "--always", "--tags", revision)
 
 	if err != nil {
 		return "", err
@@ -288,7 +287,7 @@ func Lock() error {
 	return nil
 }
 
-func Release(ctx context.Context) error {
+func Release() error {
 	wd, err := os.Getwd()
 
 	if err != nil {
