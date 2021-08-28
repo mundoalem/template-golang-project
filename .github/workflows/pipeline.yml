@@ -20,11 +20,15 @@ jobs:
         with:
           path: vendor/pkg/mod
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-      - name: Lint
+      - name: Install Mage
         run: |
           curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar -xzf- mage
+          chmod +x mage
+          sudo mv mage /usr/bin
+      - name: Lint
+        run: |
           go mod vendor
-          ./mage -v lint
+          mage -v lint
   test:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -43,11 +47,15 @@ jobs:
         with:
           path: vendor/pkg/mod
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-      - name: Test
+      - name: Install Mage
         run: |
           curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar -xzf- mage
+          chmod +x mage
+          sudo mv mage /usr/bin
+      - name: Test
+        run: |
           go mod vendor
-          ./mage -v test
+          mage -v test
       - name: Coverage
         run: |
           bash <(curl -s https://codecov.io/bash)
@@ -90,11 +98,15 @@ jobs:
         with:
           path: vendor/pkg/mod
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-      - name: Build
+      - name: Install Mage
         run: |
           curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar -xzf- mage
+          chmod +x mage
+          sudo mv mage /usr/bin
+      - name: Build
+        run: |
           go mod vendor
-          ./mage -v build
+          mage -v build
       - uses: actions/upload-artifact@v2
         with:
           name: build-artifacts
@@ -119,10 +131,14 @@ jobs:
         with:
           name: build-artifacts
           path: pkg/
-      - name: Release
+      - name: Install Mage
         run: |
           curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar -xzf- mage
-          ./mage -v release
+          chmod +x mage
+          sudo mv mage /usr/bin
+      - name: Release
+        run: |
+          mage -v release
       - uses: softprops/action-gh-release@v1
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
         with:
