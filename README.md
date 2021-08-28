@@ -1,14 +1,15 @@
-# Go Language's Project Template
+![Template Golang Project](https://filedn.eu/l45LsG0EHKuQexEoFRSickh/header_template_golang_project.png)
+
+## Introduction
 
 ![Go Version](https://img.shields.io/github/go-mod/go-version/mundoalem/template-golang-project) ![Release Version](https://img.shields.io/github/v/release/mundoalem/template-golang-project) ![License](https://img.shields.io/github/license/mundoalem/template-golang-project) ![Pipeline Status](https://github.com/mundoalem/template-golang-project/actions/workflows/pipeline.yml/badge.svg) [![codecov](https://codecov.io/gh/mundoalem/template-golang-project/branch/main/graph/badge.svg?token=R0HJ0SAOC0)](https://codecov.io/gh/mundoalem/template-golang-project) ![Issues](https://img.shields.io/github/issues/mundoalem/template-golang-project) ![Contributors](https://img.shields.io/github/contributors/mundoalem/template-golang-project)
 
-A template to scaffold a Golang project.
+A template to bootstrap a Golang project following DevOps practices.
 
 You can find it [here](https://github.com/golang-standards/project-layout)
 a full explanation of the directory structure.
 
-You can control the project through the script `scripts/project.sh`, you can
-pass it the following arguments:
+You can control the project through the script `scripts/project.sh`, it accepts the following arguments:
 
 | Argument | Description                                                       |
 | -------- | --------------------------------------------------------------    |
@@ -24,6 +25,21 @@ pass it the following arguments:
 
 1. The package will be created for the current architecture
 2. Any extra arguments will be passed through to the executable
+
+## License
+
+
+[GPLv3](https://choosealicense.com/licenses/gpl-3.0/)
+
+
+## Tech Stack
+
+
+These are the software baked in this template:
+
+- [Go](https://www.python.org/) 1.15
+- [Cli](github.com/mitchellh/cli)
+
 
 Example:
 

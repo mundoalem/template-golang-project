@@ -9,15 +9,27 @@ import (
 )
 
 const AppName = "template-golang-project"
-const Version = "1.0.0"
+
+// The following values are set during build time by the linker
+var (
+	Commit    string
+	BuildTime string
+	Version   string
+)
+
+type Empty struct{}
 
 func main() {
 	c := cli.NewCLI(AppName, Version)
 	c.Args = os.Args[1:]
 
 	c.Commands = map[string]cli.CommandFactory{
-		"foo": func() (cli.Command, error) {
-			return &command.FooCommand{}, nil
+		"version": func() (cli.Command, error) {
+			return &command.VersionCommand{
+				Commit:    Commit,
+				BuildTime: BuildTime,
+				Version:   Version,
+			}, nil
 		},
 	}
 

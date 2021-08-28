@@ -8,7 +8,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        go-version: [ 1.15.7 ]
+        go-version: [ 1.16.5 ]
         os: [ ubuntu-20.04 ]
     name: Lint
     steps:
@@ -16,20 +16,39 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go-version }}
-      - uses: actions/cache@v2
+      - name: Cache vendor directory
+        uses: actions/cache@v2
+        id: cache-vendor
         with:
-          path: vendor/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: ${{ runner.os }}-go-
-      - run: |
+          path: vendor/
+          key: ${{ runner.os }}-go-${{ hashFiles('go.sum') }}
+      - name: Cache mage install
+        id: cache-mage
+        uses: actions/cache@v2
+        with:
+          path: ~/.local/bin/mage
+          key: ${{ runner.os }}-mage-${{ hashFiles('~/.local/bin/mage') }}
+      - name: Install Mage
+        if: steps.cache-mage.outputs.cache-hit != 'true'
+        run: |
+          curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar -xzf- mage
+          chmod +x mage
+          mkdir -p ~/.local/bin
+          mv mage ~/.local/bin
+      - name: Install Dependencies
+        if: steps.cache-vendor.outputs.cache-hit != 'true'
+        run: |
           go mod vendor
-          scripts/project.sh lint
+      - name: Lint
+        run: |
+          mage -v lint
+  
   test:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        go-version: [ 1.15.7 ]
+        go-version: [ 1.16.5 ]
         os: [ ubuntu-20.04 ]
     name: Test
     needs: lint
@@ -38,42 +57,72 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go-version }}
-      - uses: actions/cache@v2
+      - name: Cache vendor directory
+        uses: actions/cache@v2
+        id: cache-vendor
         with:
-          path: vendor/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: ${{ runner.os }}-go-
-      - run: |
+          path: vendor/
+          key: ${{ runner.os }}-go-${{ hashFiles('go.sum') }}
+      - name: Cache mage install
+        id: cache-mage
+        uses: actions/cache@v2
+        with:
+          path: ~/.local/bin/mage
+          key: ${{ runner.os }}-mage-${{ hashFiles('~/.local/bin/mage') }}
+      - name: Install Mage
+        if: steps.cache-mage.outputs.cache-hit != 'true'
+        run: |
+          curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar -xzf- mage
+          chmod +x mage
+          mkdir -p ~/.local/bin
+          mv mage ~/.local/bin
+      - name: Install Dependencies
+        if: steps.cache-vendor.outputs.cache-hit != 'true'
+        run: |
           go mod vendor
-          scripts/project.sh test
-      - run: |
+      - name: Test
+        run: |
+          mage -v test
+      - name: Coverage
+        run: |
           bash <(curl -s https://codecov.io/bash)
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+  
   scan:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        go-version: [ 1.15.7 ]
+        go-version: [ 1.16.5 ]
         os: [ ubuntu-20.04 ]
     name: Scan
     needs: lint
     steps:
       - uses: actions/checkout@v2
-      - run: |
+      - name: Cache vendor directory
+        uses: actions/cache@v2
+        id: cache-vendor
+        with:
+          path: vendor/
+          key: ${{ runner.os }}-go-${{ hashFiles('go.sum') }}
+      - name: Install Dependencies
+        if: steps.cache-vendor.outputs.cache-hit != 'true'
+        run: |
           go mod vendor
-      - uses: snyk/actions/golang@master
+      - name: Scan
+        uses: snyk/actions/golang@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           args: --fail-on=upgradable
+
   build:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        go-version: [ 1.15.7 ]
+        go-version: [ 1.16.5 ]
         os: [ ubuntu-20.04 ]
     name: Build
     needs: [test, scan]
@@ -82,26 +131,45 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go-version }}
-      - uses: actions/cache@v2
+      - name: Cache vendor directory
+        id: cache-vendor
+        uses: actions/cache@v2
         with:
-          path: vendor/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: ${{ runner.os }}-go-
-      - run: |
+          path: vendor/
+          key: ${{ runner.os }}-go-${{ hashFiles('go.sum') }}
+      - name: Cache mage install
+        id: cache-mage
+        uses: actions/cache@v2
+        with:
+          path: ~/.local/bin/mage
+          key: ${{ runner.os }}-mage-${{ hashFiles('~/.local/bin/mage') }}
+      - name: Install Mage
+        if: steps.cache-mage.outputs.cache-hit != 'true'
+        run: |
+          curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar -xzf- mage
+          chmod +x mage
+          mkdir -p ~/.local/bin
+          mv mage ~/.local/bin
+      - name: Install Dependencies
+        if: steps.cache-vendor.outputs.cache-hit != 'true'
+        run: |
           go mod vendor
-          scripts/project.sh build
+      - name: Build
+        run: |
+          mage -v build
       - uses: actions/upload-artifact@v2
         with:
           name: build-artifacts
           path: |
-            build/*
-            !build/.gitkeep
+            pkg/*
+            !pkg/.gitkeep
+
   release:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        go-version: [ 1.15.7 ]
+        go-version: [ 1.16.5 ]
         os: [ ubuntu-20.04 ]
     name: Release
     needs: build
@@ -110,11 +178,26 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go-version }}
+      - name: Cache mage install
+        id: cache-mage
+        uses: actions/cache@v2
+        with:
+          path: ~/.local/bin/mage
+          key: ${{ runner.os }}-mage-${{ hashFiles('~/.local/bin/mage') }}
       - uses: actions/download-artifact@v2
         with:
           name: build-artifacts
-          path: build/
-      - run: scripts/project.sh release
+          path: pkg/
+      - name: Install Mage
+        if: steps.cache-mage.outputs.cache-hit != 'true'
+        run: |
+          curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar -xzf- mage
+          chmod +x mage
+          mkdir -p ~/.local/bin
+          mv mage ~/.local/bin
+      - name: Release
+        run: |
+          mage -v release
       - uses: softprops/action-gh-release@v1
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
         with:
