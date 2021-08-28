@@ -106,16 +106,14 @@ func version() (string, error) {
 // MAGE TARGETS
 // /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func Build(ctx context.Context) error {
-	mg.SerialDeps(Clean, Lock)
-
+func Build() error {
 	isRelease := false
 
-	if v := ctx.Value("isRelease"); v != nil {
-		if value, ok := v.(bool); ok {
-			isRelease = value
-		}
+	if os.Getenv("CI") != "" {
+		isRelease = true
 	}
+
+	fmt.Printf("Release mode: %t\n", isRelease)
 
 	var err error
 	var commandDirs []string
@@ -223,7 +221,6 @@ func Lint() error {
 	pathsToLint := []string{
 		CmdDir,
 		InternalDir,
-		PkgDir,
 	}
 
 	for _, path := range pathsToLint {
@@ -279,8 +276,6 @@ func Lock() error {
 }
 
 func Release(ctx context.Context) error {
-	mg.CtxDeps(context.WithValue(ctx, "isRelease", true), Build)
-
 	wd, err := os.Getwd()
 
 	if err != nil {
