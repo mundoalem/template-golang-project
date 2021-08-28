@@ -26,14 +26,14 @@ jobs:
         id: cache-mage
         uses: actions/cache@v2
         with:
-          path: /usr/bin/mage
-          key: ${{ runner.os }}-mage-${{ hashFiles('/usr/bin/mage') }}
+          path: ~/.local/bin/mage
+          key: ${{ runner.os }}-mage-${{ hashFiles('~/.local/bin/mage') }}
       - name: Install Mage
         if: steps.cache-mage.outputs.cache-hit != 'true'
         run: |
           curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar -xzf- mage
           chmod +x mage
-          sudo mv mage /usr/bin
+          mv mage ~/.local/bin
       - name: Lint
         run: |
           go mod vendor
@@ -62,14 +62,14 @@ jobs:
         id: cache-mage
         uses: actions/cache@v2
         with:
-          path: /usr/bin/mage
-          key: ${{ runner.os }}-mage-${{ hashFiles('/usr/bin/mage') }}
+          path: ~/.local/bin/mage
+          key: ${{ runner.os }}-mage-${{ hashFiles('~/.local/bin/mage') }}
       - name: Install Mage
         if: steps.cache-mage.outputs.cache-hit != 'true'
         run: |
           curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar -xzf- mage
           chmod +x mage
-          sudo mv mage /usr/bin
+          mv mage ~/.local/bin
       - name: Test
         run: |
           go mod vendor
@@ -122,14 +122,14 @@ jobs:
         id: cache-mage
         uses: actions/cache@v2
         with:
-          path: /usr/bin/mage
-          key: ${{ runner.os }}-mage-${{ hashFiles('/usr/bin/mage') }}
+          path: ~/.local/bin/mage
+          key: ${{ runner.os }}-mage-${{ hashFiles('~/.local/bin/mage') }}
       - name: Install Mage
         if: steps.cache-mage.outputs.cache-hit != 'true'
         run: |
           curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar -xzf- mage
           chmod +x mage
-          sudo mv mage /usr/bin
+          mv mage ~/.local/bin
       - name: Build
         run: |
           go mod vendor
@@ -158,8 +158,8 @@ jobs:
         id: cache-mage
         uses: actions/cache@v2
         with:
-          path: /usr/bin/mage
-          key: ${{ runner.os }}-mage-${{ hashFiles('/usr/bin/mage') }}
+          path: ~/.local/bin/mage
+          key: ${{ runner.os }}-mage-${{ hashFiles('~/.local/bin/mage') }}
       - uses: actions/download-artifact@v2
         with:
           name: build-artifacts
@@ -169,7 +169,7 @@ jobs:
         run: |
           curl -sSL https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz | tar -xzf- mage
           chmod +x mage
-          sudo mv mage /usr/bin
+          mv mage ~/.local/bin
       - name: Release
         run: |
           mage -v release
