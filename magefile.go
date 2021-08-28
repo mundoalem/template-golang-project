@@ -305,7 +305,7 @@ func Release(ctx context.Context) error {
 		destPath := path.Join(BuildDir, tarball)
 
 		args := []string{
-			"-czvf",
+			"-czf",
 			destPath,
 			"-C",
 			sourcePath,
@@ -317,6 +317,8 @@ func Release(ctx context.Context) error {
 		if err != nil {
 			return err
 		}
+
+		fmt.Printf("Release package for %s/%s created\n", goos, goarch)
 	}
 
 	if os.Getenv("CI") != "" {
