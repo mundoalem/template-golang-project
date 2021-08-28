@@ -35,9 +35,12 @@ jobs:
           chmod +x mage
           mkdir -p ~/.local/bin
           mv mage ~/.local/bin
-      - name: Lint
+      - name: Install Dependencies
+        if: steps.cache-vendor.outputs.cache-hit != 'true'
         run: |
           go mod vendor
+      - name: Lint
+        run: |
           mage -v lint
   
   test:
