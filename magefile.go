@@ -18,21 +18,26 @@ import (
 )
 
 const (
-	BuildDir            string = "build"
-	CmdDependencies     string = "snyk"
-	CmdDir              string = "cmd"
-	CoverageProfileFile string = "coverage.txt"
-	CoverageMode        string = "atomic"
-	InternalDir         string = "internal"
-	PkgDir              string = "pkg"
-	SupportedPlatforms  string = "darwin/amd64 darwin/arm64 linux/amd64 linux/arm64 windows/amd64"
-	VendorDir           string = "vendor"
+	CoverageMode       string = "atomic"
+	SupportedPlatforms string = "darwin/amd64 darwin/arm64 linux/amd64 linux/arm64 windows/amd64"
+)
+
+var (
+	BuildDir            string = path.Join(".", "build")
+	CmdDir              string = path.Join(".", "cmd")
+	CoverageProfileFile string = path.Join(".", "coverage.txt")
+	DistDir             string = path.Join(".", "dist")
+	InternalDir         string = path.Join(".", "internal")
+	PkgDir              string = path.Join(".", "pkg")
+	ReleaseDir          string = path.Join(BuildDir, "release")
+	VendorDir           string = path.Join(".", "vendor")
 )
 
 // /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // FUNCTIONS
 // /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// commit returns the hash of the last commit done to the git repository HEAD
 func commit() (string, error) {
 	hash, err := sh.Output("git", "rev-parse", "--short", "HEAD")
 
@@ -43,6 +48,7 @@ func commit() (string, error) {
 	return hash, nil
 }
 
+// constains returns whether a string is inside a slice or not
 func contains(s []string, el string) bool {
 	for _, v := range s {
 		if v == el {
@@ -53,6 +59,8 @@ func contains(s []string, el string) bool {
 	return false
 }
 
+// linkerFlags returns a list of argument flags to be used bby the go compiler while building
+// the project
 func linkerFlags(isRelease bool) (string, error) {
 	var err error
 	var flags []string
@@ -81,6 +89,7 @@ func linkerFlags(isRelease bool) (string, error) {
 	return strings.Join(flags, " "), nil
 }
 
+// version returns the version of the project or the last revision hash if a tag cannot be found
 func version() (string, error) {
 	var err error
 	var revision string
@@ -118,6 +127,7 @@ func version() (string, error) {
 // MAGE TARGETS
 // /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// Build compiles the project for all the supported platforms
 func Build() error {
 	isRelease := false
 
@@ -163,7 +173,7 @@ func Build() error {
 				os := strings.Split(platform, "/")[0]
 				arch := strings.Split(platform, "/")[1]
 				mainFilePath := path.Join(dir, "main.go")
-				outputFilePath := path.Join(PkgDir, os+"_"+arch, command)
+				outputFilePath := path.Join(BuildDir, os+"_"+arch, command)
 
 				envVars := map[string]string{
 					"CGO_ENABLED":          "0",
@@ -203,13 +213,14 @@ func Build() error {
 	return nil
 }
 
+// Clean removes temporary and build files
 func Clean() error {
 	pathsToRemove := []string{
 		CoverageProfileFile,
 	}
 
-	err := filepath.Walk(PkgDir, func(path string, info os.FileInfo, err error) error {
-		if info.IsDir() && path != PkgDir {
+	err := filepath.Walk(BuildDir, func(path string, info os.FileInfo, err error) error {
+		if info.IsDir() && path != BuildDir {
 			pathsToRemove = append(pathsToRemove, path)
 		}
 
@@ -229,10 +240,12 @@ func Clean() error {
 	return nil
 }
 
+// Lint checks the project's code for style and syntax issues
 func Lint() error {
 	pathsToLint := []string{
 		CmdDir,
 		InternalDir,
+		PkgDir,
 	}
 
 	for _, path := range pathsToLint {
@@ -275,6 +288,7 @@ func Lint() error {
 	return nil
 }
 
+// Lock syncs the go.sum file and the project's dependencies
 func Lock() error {
 	if err := sh.RunV("go", "mod", "vendor"); err != nil {
 		return err
@@ -287,6 +301,7 @@ func Lock() error {
 	return nil
 }
 
+// Release generates a release tarball containing the built files for each supported platform
 func Release() error {
 	wd, err := os.Getwd()
 
@@ -306,7 +321,7 @@ func Release() error {
 	for _, platform := range platforms {
 		goos := strings.Split(platform, "/")[0]
 		goarch := strings.Split(platform, "/")[1]
-		sourcePath := path.Join(PkgDir, fmt.Sprintf("%s_%s", goos, goarch))
+		sourcePath := path.Join(BuildDir, fmt.Sprintf("%s_%s", goos, goarch))
 
 		if _, err := os.Stat(sourcePath); os.IsNotExist(err) {
 			fmt.Printf("Warning: Build files not found for %s/%s\n", goos, goarch)
@@ -314,7 +329,7 @@ func Release() error {
 		}
 
 		tarball := fmt.Sprintf("%s-%s-%s-%s.tar.gz", programName, version[1:], goos, goarch)
-		destPath := path.Join(BuildDir, tarball)
+		destPath := path.Join(DistDir, tarball)
 
 		args := []string{
 			"-czf",
@@ -340,6 +355,7 @@ func Release() error {
 	return nil
 }
 
+// Reset removes all files that Clean does plus the vendor directory
 func Reset() error {
 	mg.Deps(Clean)
 
@@ -354,6 +370,7 @@ func Reset() error {
 	return nil
 }
 
+// Scan runs a security check using Snyk to search for known vulnerabilities in project
 func Scan() error {
 	_, err := exec.LookPath("snyk")
 
@@ -369,6 +386,7 @@ func Scan() error {
 	return sh.RunV("snyk", args...)
 }
 
+// Test runs the unit test for the project
 func Test() error {
 	args := []string{
 		"test",
