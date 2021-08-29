@@ -4,10 +4,8 @@
 
 ![Go Version](https://img.shields.io/github/go-mod/go-version/mundoalem/template-golang-project)
 ![Release Version](https://img.shields.io/github/v/release/mundoalem/template-golang-project)
-![License](https://img.shields.io/github/license/mundoalem/template-golang-project)
 ![Pipeline Status](https://github.com/mundoalem/template-golang-project/actions/workflows/pipeline.yml/badge.svg)
 [![codecov](https://codecov.io/gh/mundoalem/template-golang-project/branch/main/graph/badge.svg?token=R0HJ0SAOC0)](https://codecov.io/gh/mundoalem/template-golang-project)
-![Issues](https://img.shields.io/github/issues/mundoalem/template-golang-project)
 ![Contributors](https://img.shields.io/github/contributors/mundoalem/template-golang-project)
 
 A DevOps centric template to bootstrap Go projects.
