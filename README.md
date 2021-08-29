@@ -21,7 +21,7 @@ practices.
 You can find [here](https://github.com/golang-standards/project-layout)
 a full explanation of the directory structure.
 
-You can control the project through the use of `[mage](https://magefile.org/)`, it accepts
+You can control the project through the use of [mage](https://magefile.org/), it accepts
 the following targets:
 
 | Argument | Description                                                       |
@@ -124,7 +124,7 @@ with, make a fork and see how it works.
 
 We will exclude you from interaction if you insult, demean or harass anyone. That is not welcome
 behavior. We interpret the term "harassment" as including the definition in the
-(Citizen Code)[http://citizencodeofconduct.org/] of Conduct; if you have any lack of clarity
+[Citizen Code](http://citizencodeofconduct.org/) of Conduct; if you have any lack of clarity
 about what might be included in that concept, please read their definition. In particular,
 we don't tolerate behavior that excludes people in socially marginalized groups.
 
