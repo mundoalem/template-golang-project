@@ -20,9 +20,9 @@ vendor/*
 build/*
 !build/.gitkeep
 
-# Package directory
-pkg/*
-!pkg/.gitkeep
+# Dist directory
+dist/*
+!dist/.gitkeep
 
 # Editors
 .idea/

@@ -161,8 +161,8 @@ jobs:
         with:
           name: build-artifacts
           path: |
-            pkg/*
-            !pkg/.gitkeep
+            build/*
+            !build/.gitkeep
 
   release:
     runs-on: ${{ matrix.os }}
@@ -187,7 +187,7 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: build-artifacts
-          path: pkg/
+          path: build/
       - name: Install Mage
         if: steps.cache-mage.outputs.cache-hit != 'true'
         run: |
@@ -202,7 +202,7 @@ jobs:
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
         with:
           name: ${{ steps.vars.outputs.version }}
-          files: build/*.tar.gz
+          files: dist/*.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: $GITHUB_REPOSITORY
