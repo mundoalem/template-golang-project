@@ -47,8 +47,9 @@ the following targets:
 
 These are the software baked in this template:
 
-- [Go](https://www.python.org/) 1.16.5
-- [Cli](github.com/mitchellh/cli)
+- [Go](https://www.python.org/) v1.17.0
+- [Cli](github.com/mitchellh/cli) v1.1.2
+- [Magefile](https://github.com/magefile/mage) v1.11.0
 
 ## Usage
 
