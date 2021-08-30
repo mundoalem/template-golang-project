@@ -19,6 +19,7 @@ package main
 import (
 	"log"
 	"os"
+	"time"
 
 	"github.com/mitchellh/cli"
 	"github.com/mundoalem/template-golang-project/internal/command"
@@ -27,11 +28,11 @@ import (
 // The following values are set during build time through the linker flags.
 var (
 	// AppName is the name of current application.
-	AppName string = "app"
+	AppName string = "template-golang-project"
 	// Commit is the hash of the commit used to build the current binary.
-	Commit string
+	Commit string = "unknown"
 	// BuildTime is a representation of the build process timestamp in RFC3339 format.
-	BuildTime string
+	BuildTime string = time.Now().Format(time.RFC3339)
 	// Version is the current version of the binary.
 	Version string = "dev"
 )
