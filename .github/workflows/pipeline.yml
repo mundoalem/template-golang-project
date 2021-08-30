@@ -21,7 +21,7 @@ jobs:
         id: cache-vendor
         with:
           path: vendor/
-          key: ${{ runner.os }}-go-${{ hashFiles('go.sum') }}
+          key: ${{ runner.os }}-go${{ matrix.go-version }}-${{ hashFiles('go.sum') }}
       - name: Cache mage install
         id: cache-mage
         uses: actions/cache@v2
@@ -62,7 +62,7 @@ jobs:
         id: cache-vendor
         with:
           path: vendor/
-          key: ${{ runner.os }}-go-${{ hashFiles('go.sum') }}
+          key: ${{ runner.os }}-go${{ matrix.go-version }}-${{ hashFiles('go.sum') }}
       - name: Cache mage install
         id: cache-mage
         uses: actions/cache@v2
@@ -105,7 +105,7 @@ jobs:
         id: cache-vendor
         with:
           path: vendor/
-          key: ${{ runner.os }}-go-${{ hashFiles('go.sum') }}
+          key: ${{ runner.os }}-go${{ matrix.go-version }}-${{ hashFiles('go.sum') }}
       - name: Install Dependencies
         if: steps.cache-vendor.outputs.cache-hit != 'true'
         run: |
@@ -136,7 +136,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: vendor/
-          key: ${{ runner.os }}-go-${{ hashFiles('go.sum') }}
+          key: ${{ runner.os }}-go${{ matrix.go-version }}-${{ hashFiles('go.sum') }}
       - name: Cache mage install
         id: cache-mage
         uses: actions/cache@v2
