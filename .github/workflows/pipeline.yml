@@ -8,7 +8,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        go-version: [ 1.16.5 ]
+        go-version: [ 1.17.0 ]
         os: [ ubuntu-20.04 ]
     name: Lint
     steps:
@@ -48,7 +48,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        go-version: [ 1.16.5 ]
+        go-version: [ 1.17.0 ]
         os: [ ubuntu-20.04 ]
     name: Test
     needs: lint
@@ -94,7 +94,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        go-version: [ 1.16.5 ]
+        go-version: [ 1.17.0 ]
         os: [ ubuntu-20.04 ]
     name: Scan
     needs: lint
@@ -122,7 +122,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        go-version: [ 1.16.5 ]
+        go-version: [ 1.17.0 ]
         os: [ ubuntu-20.04 ]
     name: Build
     needs: [test, scan]
@@ -169,7 +169,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        go-version: [ 1.16.5 ]
+        go-version: [ 1.17.0 ]
         os: [ ubuntu-20.04 ]
     name: Release
     needs: build
