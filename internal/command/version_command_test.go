@@ -1,13 +1,16 @@
 package command
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 func TestVersionCommand_Help(t *testing.T) {
 	cmd := VersionCommand{}
-	msg := cmd.Help()
+	msg := strings.TrimSpace(cmd.Help())
 
-	if msg != "Shows the command version and build metadata" {
-		t.Log("Help() returned unexpected value", msg)
+	if msg == "" {
+		t.Log("Help() should not return an empty string", msg)
 		t.Fail()
 	}
 }
@@ -24,10 +27,10 @@ func TestVersionCommand_Run(t *testing.T) {
 
 func TestVersionCommand_Synopsis(t *testing.T) {
 	cmd := VersionCommand{}
-	msg := cmd.Synopsis()
+	msg := strings.TrimSpace(cmd.Synopsis())
 
-	if msg != "Shows the command version and build metadata" {
-		t.Log("Synopsis() returned unexpected value", msg)
+	if msg == "" {
+		t.Log("Synopsis() should not return an empty string", msg)
 		t.Fail()
 	}
 }
