@@ -53,12 +53,39 @@ These are the software baked in this template:
 
 ## Usage
 
+In order to use this template you first need to clone this repo locally:
+
+```
+$ git clone git@github.com:mundoalem/template-golang-project.git
+$ cd template-golang-project/
+```
+
+After you finish cloning the template you can start using it right away, however it may be better to make the project
+your own by:
+
+- Set your preferred Go version in `go.mod` and `.github/workflows/pipeline.yml` files.
+- Add your license to the `LICENSE` file.
+- Update the license header in all Go files.
+- Update the README.md with your project information.
+- Set the supported platforms in `magefile.go`
+
+Then install all dependencies by running:
+
+```
+$ go mod vendor
+```
+
+Last but not least, all pipeline jobs can be also run locally by invoking `mage`, example:
+
 ```bash
 $ mage lint
 $ mage test
 $ mage build
 $ mage release
 ```
+
+In order to release a package you can just create a release in GitHub with a tag, the pipeline will then start and at
+the end of the release step it will attach the package tarballs to the release.
 
 ## Environment Variables
 
@@ -151,3 +178,12 @@ The reason for that is that I don't want to have a `.travis.yml`, a
 `circleci.yml` and a `.gitlab-ci.yml` all together in the same place when only
 one would actually be used. So I want to avoid (for now) cluttering the
 template with too many files that might or might not be useful.
+
+## Will the template generate my project's documentation?
+
+No, different than language like Python and Java, Go follows a different approach to documentation. Services like 
+[go.dev](https://go.dev/) are meant for the standard tools and not for public packages like PyPi and Rubygems are for.
+
+Also, `godoc` is meant to serve your whole `$GOROOT` documentation while `go dot` might help only for viewing the
+documentation on the console. So, until one day when we have something like Sphinx available this feature will not be
+added.
