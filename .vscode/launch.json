@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug",
+            "type": "go",
+            "debugAdapter": "dlv-dap",
+            "request": "launch",
+            "mode": "debug",
+            "console": "integratedTerminal",
+            "program": "cmd/template-golang-project/main.go",
+            "args": ["version"]
+        }
+    ]
+}

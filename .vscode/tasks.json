@@ -1,0 +1,45 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build",
+            "type": "shell",
+            "command": "mage build"
+        },
+        {
+            "label": "Clean",
+            "type": "shell",
+            "command": "mage clean"
+        },
+        {
+            "label": "Lint",
+            "type": "shell",
+            "command": "mage lint"
+        },
+        {
+            "label": "Lock",
+            "type": "shell",
+            "command": "mage lock"
+        },
+        {
+            "label": "Release",
+            "type": "shell",
+            "command": "mage release"
+        },
+        {
+            "label": "Reset",
+            "type": "shell",
+            "command": "mage reset"
+        },
+        {
+            "label": "Scan",
+            "type": "shell",
+            "command": "mage scan"
+        },
+        {
+            "label": "Test",
+            "type": "shell",
+            "command": "mage test"
+        }
+    ]
+}

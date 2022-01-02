@@ -1,0 +1,33 @@
+{
+	"name": "Go",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"context": ".."
+	},
+	"settings": {
+		"editor.defaultFormatter": "golang.go-nightly",
+		"editor.formatOnSave": true,
+		"editor.rulers": [
+			80,
+			120
+		],
+		"terminal.integrated.profiles.linux": {
+			"bash": {
+				"path": "/usr/bin/bash"
+			},
+			"fish": {
+				"path": "/usr/bin/fish"
+			},
+			"zsh": {
+				"path": "/usr/bin/zsh"
+			}
+		},
+		"terminal.integrated.defaultProfile.linux": "fish"
+	},
+	"extensions": [
+		"eamodio.gitlens",
+		"golang.go-nightly"
+	],
+	"postCreateCommand": "go mod tidy && go mod vendor",
+	"remoteUser": "vscode"
+}
