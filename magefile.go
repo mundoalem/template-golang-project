@@ -1,4 +1,4 @@
-// +build mage
+//go:build mage
 
 // This file is part of template-golang-project.
 //
@@ -30,6 +30,7 @@ import (
 
 	"github.com/magefile/mage/mg"
 	"github.com/magefile/mage/sh"
+	"github.com/pterm/pterm"
 )
 
 const (
@@ -144,13 +145,15 @@ func version() (string, error) {
 
 // Build compiles the project for all the supported platforms
 func Build() error {
+	pterm.Info.Println("Build process started")
+
 	isRelease := false
 
 	if os.Getenv("CI") != "" {
 		isRelease = true
 	}
 
-	fmt.Printf("Release mode: %t\n", isRelease)
+	pterm.Info.Printfln("Release mode: %t", isRelease)
 
 	var err error
 	var commandDirs []string
@@ -164,13 +167,15 @@ func Build() error {
 	})
 
 	if err != nil {
+		pterm.Error.Printfln("Could not find command directories: ", err)
 		return err
 	}
 
 	ldFlags, err := linkerFlags(isRelease)
 
 	if err != nil {
-		fmt.Println(err)
+		pterm.Error.Printfln("Could not get linker flags: ", err)
+		return err
 	}
 
 	hasErrors := false
@@ -210,10 +215,10 @@ func Build() error {
 				err := sh.RunWithV(envVars, "go", args...)
 
 				if err != nil {
-					fmt.Printf("Error: Build for %s/%s failed: %s\n", os, arch, err)
+					pterm.Error.Printfln("Build for %s/%s failed: %s", os, arch, err)
 					hasErrors = true
 				} else {
-					fmt.Printf("Build for %s/%s completed\n", os, arch)
+					pterm.Info.Printfln("Build for %s/%s completed", os, arch)
 				}
 			}(platform, commandDir)
 		}
@@ -222,14 +227,19 @@ func Build() error {
 	wg.Wait()
 
 	if hasErrors {
+		pterm.Error.Printfln("Build process failed!")
 		return errors.New("One or more build processes failed!")
 	}
+
+	pterm.Success.Println("Build process completed")
 
 	return nil
 }
 
 // Clean removes temporary and build files
 func Clean() error {
+	pterm.Info.Println("Clean process started")
+
 	pathsToRemove := []string{
 		CoverageProfileFile,
 	}
@@ -243,14 +253,36 @@ func Clean() error {
 	})
 
 	if err != nil {
+		pterm.Error.Printfln("Failed to determine paths to be removed: ", err)
 		return err
 	}
 
+	cleanReport := make([]pterm.BulletListItem, 0)
+	flagError := false
+
 	for _, path := range pathsToRemove {
+		cleanReporItem := pterm.NewBulletListItemFromString(path, "")
+
 		if err := sh.Rm(path); err != nil {
-			return err
+			flagError = true
+			cleanReporItem.TextStyle = pterm.NewStyle(pterm.FgRed)
+			cleanReporItem.BulletStyle = pterm.NewStyle(pterm.FgRed)
+
+			pterm.Error.Printfln("Could not remove '%s': %s", path, err)
 		}
+
+		cleanReport = append(cleanReport, cleanReporItem)
 	}
+
+	pterm.DefaultSection.Println("Removed")
+	pterm.DefaultBulletList.WithItems(cleanReport).Render()
+
+	if flagError {
+		pterm.Error.Println("Clean process completed with errors")
+		return errors.New("Process failed")
+	}
+
+	pterm.Success.Println("Clean process completed")
 
 	return nil
 }
@@ -297,6 +329,24 @@ func Lint() error {
 			if err != nil {
 				return err
 			}
+		}
+	}
+
+	for _, path := range pathsToLint {
+		var args []string
+		var err error
+
+		args = []string{
+			"-tests",
+			"-f",
+			"stylish",
+			fmt.Sprintf("./%s/...", path),
+		}
+
+		err = sh.RunV("staticcheck", args...)
+
+		if err != nil {
+			return err
 		}
 	}
 
